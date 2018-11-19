@@ -1,3 +1,5 @@
+const { authToken } = require('../helpers/jwtoken');
+
 const { findUser, createUser } = require('../queries/user');
 
 module.exports =  {
@@ -10,7 +12,14 @@ module.exports =  {
        return res.status(422).send({ error: 'User exists'});
 
        const newUser  = await createUser({ email, password });
+      
+        return res.json({ token: authToken(newUser)});
+    },
 
-        return res.json(newUser);
+    signin (req, res) {
+        //passport done assign 'user' to req
+        return res.json({ token: authToken(req.user)});
+
     }
+
 }

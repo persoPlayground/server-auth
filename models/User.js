@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise
-const { genHash } = require('../helpers/hashPass');
+const { genHash, compare } = require('../helpers/hashPass');
 
 const Schema = mongoose.Schema;
 
@@ -19,6 +19,9 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    return await compare(candidatePassword, this);
+}
 const user = mongoose.model('user', userSchema);
 
 module.exports = user;
